@@ -60,14 +60,14 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        RaisedButton(
+        ElevatedButton(
           child: Text('init'),
           onPressed: () async {
             var init = await QuickUsb.init();
             log('init $init');
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('exit'),
           onPressed: () async {
             await QuickUsb.exit();
@@ -78,14 +78,15 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  List<UsbDevice> _deviceList;
+  List<UsbDevice> _deviceList = [];
 
   Widget _getDeviceList() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text('getDeviceList'),
       onPressed: () async {
         _deviceList = await QuickUsb.getDeviceList();
         log('deviceList $_deviceList');
+        print("Device length was ${_deviceList.length}");
       },
     );
   }
@@ -94,14 +95,18 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        RaisedButton(
+        ElevatedButton(
           child: Text('hasPermission'),
           onPressed: () async {
             var hasPermission = await QuickUsb.hasPermission(_deviceList.first);
+            for (var x = 0; x < _deviceList.length; x++) {
+              print(
+                  "Device id --> $x : Device status --> ${await QuickUsb.hasPermission(_deviceList[x])}");
+            }
             log('hasPermission $hasPermission');
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('requestPermission'),
           onPressed: () async {
             await QuickUsb.requestPermission(_deviceList.first);
@@ -116,14 +121,19 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        RaisedButton(
+        ElevatedButton(
           child: Text('openDevice'),
           onPressed: () async {
             var openDevice = await QuickUsb.openDevice(_deviceList.first);
+
+            for (var x = 0; x < _deviceList.length; x++) {
+              print(
+                  "Device id --> $x : Device status --> ${await QuickUsb.openDevice(_deviceList[x])}");
+            }
             log('openDevice $openDevice');
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('closeDevice'),
           onPressed: () async {
             await QuickUsb.closeDevice();
@@ -140,14 +150,14 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        RaisedButton(
+        ElevatedButton(
           child: Text('getConfiguration'),
           onPressed: () async {
             _configuration = await QuickUsb.getConfiguration(0);
             log('getConfiguration $_configuration');
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('setConfiguration'),
           onPressed: () async {
             var setConfiguration =
@@ -163,7 +173,7 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        RaisedButton(
+        ElevatedButton(
           child: Text('claimInterface'),
           onPressed: () async {
             var claimInterface =
@@ -171,7 +181,7 @@ class _MyAppState extends State<MyApp> {
             log('claimInterface $claimInterface');
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('releaseInterface'),
           onPressed: () async {
             var releaseInterface =
@@ -187,7 +197,7 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        RaisedButton(
+        ElevatedButton(
           child: Text('bulkTransferIn'),
           onPressed: () async {
             var endpoint = _configuration.interfaces[0].endpoints
@@ -196,7 +206,7 @@ class _MyAppState extends State<MyApp> {
             log('bulkTransferIn ${hex.encode(bulkTransferIn)}');
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('bulkTransferOut'),
           onPressed: () async {
             var data = Uint8List.fromList(utf8.encode(''));
@@ -212,30 +222,35 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _getDevicesWithDescription() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text('getDevicesWithDescription'),
       onPressed: () async {
         var descriptions = await QuickUsb.getDevicesWithDescription();
         _deviceList = descriptions.map((e) => e.device).toList();
+
         log('descriptions $descriptions');
       },
     );
   }
 
   Widget _getDeviceDescription() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text('getDeviceDescription'),
       onPressed: () async {
         var description =
             await QuickUsb.getDeviceDescription(_deviceList.first);
         log('description ${description.toMap()}');
+        for (var x = 0; x < _deviceList.length; x++) {
+          print(
+              "Device id --> $x : Device status --> ${await QuickUsb.getDeviceDescription(_deviceList[x])}");
+        }
       },
     );
   }
 
   bool _autoDetachEnabled = false;
   Widget _setAutoDetachKernelDriver() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text('setAutoDetachKernelDriver'),
       onPressed: () async {
         await QuickUsb.setAutoDetachKernelDriver(!_autoDetachEnabled);
