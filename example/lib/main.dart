@@ -64,7 +64,8 @@ class _MyAppState extends State<MyApp> {
           child: Text('init'),
           onPressed: () async {
             var init = await QuickUsb.init();
-            log('init $init');
+            print("Init info : $init");
+            // log('init $init');
           },
         ),
         ElevatedButton(
@@ -85,7 +86,7 @@ class _MyAppState extends State<MyApp> {
       child: Text('getDeviceList'),
       onPressed: () async {
         _deviceList = await QuickUsb.getDeviceList();
-        log('deviceList $_deviceList');
+        // log('deviceList $_deviceList');
         print("Device length was ${_deviceList.length}");
       },
     );
@@ -98,7 +99,7 @@ class _MyAppState extends State<MyApp> {
         ElevatedButton(
           child: Text('hasPermission'),
           onPressed: () async {
-            var hasPermission = await QuickUsb.hasPermission(_deviceList.first);
+            var hasPermission = await QuickUsb.hasPermission(_deviceList.last);
             for (var x = 0; x < _deviceList.length; x++) {
               print(
                   "Device id --> $x : Device status --> ${await QuickUsb.hasPermission(_deviceList[x])}");
@@ -124,7 +125,7 @@ class _MyAppState extends State<MyApp> {
         ElevatedButton(
           child: Text('openDevice'),
           onPressed: () async {
-            var openDevice = await QuickUsb.openDevice(_deviceList.first);
+            var openDevice = await QuickUsb.openDevice(_deviceList.last);
 
             for (var x = 0; x < _deviceList.length; x++) {
               print(
@@ -153,8 +154,13 @@ class _MyAppState extends State<MyApp> {
         ElevatedButton(
           child: Text('getConfiguration'),
           onPressed: () async {
-            _configuration = await QuickUsb.getConfiguration(0);
+            _configuration = await QuickUsb.getConfiguration(4);
+            print("config for phone : $_configuration");
             log('getConfiguration $_configuration');
+            for (var x = 0; x < _deviceList.length; x++) {
+              print(
+                  "Device id --> $x : Device status --> ${await QuickUsb.getConfiguration(x)}");
+            }
           },
         ),
         ElevatedButton(
@@ -242,7 +248,7 @@ class _MyAppState extends State<MyApp> {
         log('description ${description.toMap()}');
         for (var x = 0; x < _deviceList.length; x++) {
           print(
-              "Device id --> $x : Device status --> ${await QuickUsb.getDeviceDescription(_deviceList[x])}");
+              "Device id --> $x : Device description --> ${await QuickUsb.getDeviceDescription(_deviceList[x])}");
         }
       },
     );
